@@ -6,15 +6,16 @@ export default class NewsApiServise{
 
     constructor() {
         this.searchQuery = '';
-    this.page = 1;
+      this.page = 1;
+      this.pageSize = 40;
     }
 
-    async feachImage() {
-console.log(this)
-const url = `${BASE_URl}?${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`;
+  async feachImage() {
+
+    const url = `${BASE_URl}?${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.pageSize}&page=${this.page}`;
     const response = await axios.get(url)
-this.incrementPage();
-    return response;
+    this.incrementPage();
+   return  response;
     }
 
      incrementPage() {

@@ -1,4 +1,5 @@
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import NewsApi from './news-api-servise';
 
@@ -23,20 +24,30 @@ refs.loadMore.addEventListener("click", onLoadMore)
 
     newsApi.query = e.currentTarget.elements.searchQuery.value;
 
-   newsApi.resetPage();
-    newsApi.feachImage().then(image => renderphotoCard(image).trim(),clearGallery()).catch(feachError);
-refs.loadMore.classList.remove('visually-hidden');
+     newsApi.resetPage();
+
+         newsApi.feachImage().then(renderphotoCard);
+         clearGallery();
 }
 
+
 function onLoadMore() {
-newsApi.feachImage().then(image =>renderphotoCard(image))
+newsApi.feachImage().then(renderphotoCard)
 
 }
 
 
 
 function renderphotoCard(image) {
+
     const images = image.data.hits;
+
+    Notiflix.Notify.info(`Hooray! We found ${image.data.totalHits} images.`);
+
+    if (images.length === 0) {
+        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+    }
+
     if (newsApi.query === '') {
         Notiflix.Notify.failure(
             'The line must not be empty.'
@@ -66,6 +77,19 @@ function renderphotoCard(image) {
     refs.gallery.insertAdjacentHTML('beforeend', markup);
     }
 
+    const lightbox = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250, captionPosition: 'bottom' });
+     lightbox.refresh()
+
+     const { height: cardHeight } = document
+     .querySelector('.gallery')
+     .firstElementChild.getBoundingClientRect();
+
+     window.scrollBy({
+  top: cardHeight * 2,
+  behavior: 'smooth',
+});
+
+    setTimeout(() => { refs.loadMore.classList.remove('visually-hidden'); }, 1000)
 
 }
 
@@ -73,8 +97,13 @@ function clearGallery() {
     refs.gallery.innerHTML = '';
 }
 
-function feachError(error) {
-     Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+// function feachError(error) {
+//     if (newsApi) {
+//         Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+//     }
 
-}
+
+// console.dir(error)
+// }
+
 
