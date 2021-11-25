@@ -97,13 +97,5 @@ function clearGallery() {
     refs.gallery.innerHTML = '';
 }
 
-// function feachError(error) {
-//     if (newsApi) {
-//         Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
-//     }
-
-
-// console.dir(error)
-// }
 
 
